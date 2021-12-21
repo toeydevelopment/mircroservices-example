@@ -1,0 +1,35 @@
+version: "3.7"
+# insecure
+services:
+  redis:
+    image: redis:alpine
+    ports:
+      - 6379:6379
+  nats:
+    image: nats:2.6.6-alpine3.14
+    expose:
+      - 4222
+      - 6222
+      - 8222
+    ports:
+      - 4222:4222
+
+  mellisearch:
+    image: getmeili/meilisearch:v0.24.0
+    ports:
+      - 7700:7700
+    # volumes:
+    #   - ./db/melli/data.ms:/home/meili/data.ms
+  database:
+    image: mongo:4.4
+    ports:
+      - 27017:27017
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=123456
+      - MONGO_INITDB_DATABASE=example
+      - MONGO_INITDB_USERNAME=username
+      - MONGO_INITDB_PASSWORD=111111
+    volumes:
+      - ./init-mongo.sh:/docker-entrypoint-initdb.d/init-mongo.sh
+      - ./db/mongo:/data/db
