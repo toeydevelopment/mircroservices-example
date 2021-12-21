@@ -1,0 +1,18 @@
+@import "./globals.scss";
+
+.main {
+  &__header {
+    padding: 2rem 0;
+    background-color: #4c2d83;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-size: 2rem;
+    letter-spacing: 1px;
+
+    @include respond(md) {
+      font-size: 3rem;
+    }
+  }
+}
