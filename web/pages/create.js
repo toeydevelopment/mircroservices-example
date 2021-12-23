@@ -1,7 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Header, TextField } from "../components";
+import useParty from "../hooks/useParty";
 
 const CreatePage = () => {
+  const [form, setForm] = useState({
+    name: "",
+    desc: "",
+    seat: 0,
+  });
+
+  const { createParty } = useParty();
+
   return (
     <>
       <Header>Create Party</Header>
@@ -31,14 +40,38 @@ const CreatePage = () => {
                   Attach a file
                 </p>
               </div>
-              <input type="file" accept="image/png, image/gif, image/jpeg" className="opacity-0" />
+              <input
+                type="file"
+                accept="image/png, image/gif, image/jpeg"
+                className="opacity-0"
+              />
             </label>
           </div>
         </div>
-        <TextField label={"Name"} type="text" />
-        <TextField label={"Description"} type="text" />
-        <TextField label={"Seats"} type="number" />
-        <Button>Submit</Button>
+        <TextField
+          label={"Name"}
+          type="text"
+          onChanged={(e) => {
+            setForm((p) => ({ ...p, name: e }));
+          }}
+        />
+        <TextField
+          label={"Description"}
+          type="text"
+          onChanged={(e) => {
+            setForm((p) => ({ ...p, desc: e }));
+          }}
+        />
+        <TextField
+          label={"Seats"}
+          type="number"
+          onChanged={(e) => {
+            setForm((p) => ({ ...p, seat: Number(e) }));
+          }}
+        />
+        <Button onClicked={() => createParty(form.name, form.desc, form.seat)}>
+          Submit
+        </Button>
       </div>
     </>
   );

@@ -1,12 +1,125 @@
 version: "3.7"
 # insecure
 services:
+
+  react-web:
+    build:
+      context: web/
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./web/:/app/
+    depends_on:
+      - party-query-service    
+      - party-orchestration-service    
+      - authentication-commad-service    
+
+       
+  api-gateway:
+    build:
+      context: backend/nginx
+      dockerfile: Dockerfile
+    ports:
+      - 80:80
+    depends_on:
+      - react-web
+      - party-query-service    
+      - party-orchestration-service    
+      - authentication-commad-service    
+    links:
+      - react-web
+      - party-query-service    
+      - party-orchestration-service    
+      - authentication-commad-service    
+
+  party-worker-service:
+    build:
+      context: backend/services/party-worker-service
+      dockerfile: Dockerfile
+    environment:
+      - MONGO_HOST=mongo:27017
+      - MONGO_USERNAME=root
+      - MONGO_PASSWORD=123456
+      - NATS_HOST=nats:4222
+      - MEILISEARCH_HOST=http://meilisearch:7700
+      - MEILISEARCH_KEY=example_key
+    links:
+      - "redis"
+      - "mongo"
+      - "nats"
+      - "meilisearch"
+    depends_on:
+      - mongo
+      - nats
+
+  party-query-service:
+    build:
+      context: backend/services/party-query-service
+      dockerfile: Dockerfile
+    environment:
+      - MONGO_HOST=mongo:27017
+      - MONGO_USERNAME=root
+      - MONGO_PASSWORD=123456
+      - NATS_HOST=nats:4222
+      - REDIS_HOST=redis:6379
+    links:
+      - "redis"
+      - "mongo"
+      - "nats"
+    depends_on:
+      - redis
+      - mongo
+      - nats
+      - meilisearch
+
+  authentication-command-service:
+    build:
+      context: backend/services/authentication-command-service
+      dockerfile: Dockerfile
+    environment:
+      - JWT_SECRET=1234123
+      - MONGO_HOST=mongo:27017
+      - MONGO_USERNAME=root
+      - MONGO_PASSWORD=123456
+      - REDIS_HOST=redis:6379
+    links:
+      - "redis"
+      - "mongo"
+    depends_on:
+      - redis
+      - mongo
+      - nats
+
+  party-orchestration-service:
+    build:
+      context: backend/services/party-orchestration-service
+      dockerfile: Dockerfile
+    environment:
+      - REDIS_HOST=redis:6379
+      - NATS_HOST=nats:4222
+      - AUTH_HOST=http://authentication-command-service:3001
+      - PARTY_QUERY_HOST=party-query-service:50051
+    links:
+      - "party-query-service"
+      - "authentication-command-service"
+      - "redis"
+      - "mongo"
+      - "nats"
+    depends_on:
+      - party-query-service
+      - authentication-command-service
+      - redis
+      - mongo
+      - nats
+
   redis:
     image: redis:alpine
+    restart: always
     ports:
       - 6379:6379
   nats:
+    container_name: nats
     image: nats:2.6.6-alpine3.14
+    restart: always
     expose:
       - 4222
       - 6222
@@ -14,14 +127,22 @@ services:
     ports:
       - 4222:4222
 
-  mellisearch:
-    image: getmeili/meilisearch:v0.24.0
+  meilisearch:
+    container_name: meilisearch
+    build:
+      context: backend/meilisearch
+      dockerfile: Dockerfile
+    restart: always
     ports:
       - 7700:7700
+    environment:
+      - MEILI_MASTER_KEY=example_key
     # volumes:
     #   - ./db/melli/data.ms:/home/meili/data.ms
-  database:
+  mongo:
+    container_name: mongo
     image: mongo:4.4
+    restart: always
     ports:
       - 27017:27017
     environment:

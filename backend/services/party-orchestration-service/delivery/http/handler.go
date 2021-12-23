@@ -47,10 +47,64 @@ func (h handler) CreateParty(c *gin.Context) {
 
 }
 
-func (h handler) UpdateParty(c *gin.Context) {}
+func (h handler) UpdateParty(c *gin.Context) {
 
-func (h handler) DeleteParty(c *gin.Context) {}
+	var body UpdatePartyRequest
 
-func (h handler) JoinParty(c *gin.Context) {}
+	if err := c.ShouldBindJSON(&body); err != nil {
+		c.AbortWithStatusJSON(http.StatusUnprocessableEntity, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
 
-func (h handler) UnjoinParty(c *gin.Context) {}
+	err := h.usc.UpdateParty(c.Request.Context(), c.Param("id"), dto.UpdatePartyDTO{
+		Name:        body.Name,
+		Description: body.Description,
+		SeatLimit:   body.SeatLimit,
+		UserEmail:   c.GetString(constant.UserEmail),
+	})
+
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"erorr": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusAccepted, gin.H{
+		"message": "success",
+	})
+
+}
+
+func (h handler) DeleteParty(c *gin.Context) {
+	if err := h.usc.DeleteParty(c.Request.Context(), c.Param("id"), c.GetString(constant.UserEmail)); err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"erorr": err.Error()})
+		return
+	}
+	c.JSON(http.StatusCreated, gin.H{
+		"message": "success",
+	})
+}
+
+func (h handler) JoinParty(c *gin.Context) {
+
+	if err := h.usc.JoinParty(c.Request.Context(), c.Param("id"), c.GetString(constant.UserEmail)); err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"erorr": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{
+		"message": "success",
+	})
+}
+
+func (h handler) UnjoinParty(c *gin.Context) {
+	if err := h.usc.UnJoinParty(c.Request.Context(), c.Param("id"), c.GetString(constant.UserEmail)); err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"erorr": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusCreated, gin.H{
+		"message": "success",
+	})
+}

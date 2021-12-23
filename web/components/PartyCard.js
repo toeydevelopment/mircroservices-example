@@ -34,10 +34,10 @@ const PartyCard = ({
       <div className="px-6 pt-4 pb-2 w-full flex justify-between">
         <div> {avaliable ?? "0 / 6"}</div>
         <div className="w-1/3">
-          {isJoined ? (
-            <Button onClick={onJoin}>Join</Button>
+          {!isJoined ? (
+            <Button onClicked={onJoin}>Join</Button>
           ) : (
-            <Button onClick={onCancel}>Cancel</Button>
+            <Button onClicked={onCancel}>Cancel</Button>
           )}
         </div>
       </div>

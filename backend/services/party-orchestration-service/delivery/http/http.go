@@ -16,11 +16,11 @@ func NewHTTP(usc usecase.IUsecase, authMid gin.HandlerFunc) error {
 
 	port := os.Getenv("APP_PORT")
 
-	portNumber := 8080
+	portNumber := 3003
 
 	if port == "" {
-		log.Println("APP_PORT not set use default :8080")
-		port = "8080"
+		log.Println("APP_PORT not set use default :3003")
+		port = "3003"
 	}
 
 	portNumber, err := strconv.Atoi(port)
@@ -31,7 +31,7 @@ func NewHTTP(usc usecase.IUsecase, authMid gin.HandlerFunc) error {
 
 	h := newHandler(usc)
 
-	g.POST("/", h.CreateParty)
+	g.POST("/", authMid, h.CreateParty)
 	g.PATCH("/:id", authMid, h.UpdateParty)
 	g.DELETE("/:id", authMid, h.DeleteParty)
 	g.POST("/:id/join", authMid, h.JoinParty)

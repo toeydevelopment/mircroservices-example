@@ -1,28 +1,24 @@
+#[warn(unused_imports)]
 extern crate party_worker_service;
-use std::time::Instant;
-use std::{str::FromStr, thread};
+// use dotenv::dotenv;
+use std::{sync::Arc, thread};
 use waitgroup::WaitGroup;
 
-use dotenv::dotenv;
-use mongodb::bson::doc;
 use mongodb::sync::Collection;
 use party_worker_service::{
-    datasource::{connect_mongo_db, connect_nats},
-    model::Party,
+    datasource::{connect_meilisearch, connect_mongo_db, connect_nats},
+    model::{Party},
     workers::{party_create, party_delete, party_join, party_unjoin, party_update},
 };
 
 #[tokio::main]
 async fn main() -> std::io::Result<()> {
-    dotenv().ok().expect("env  is not initialized");
+    // dotenv().ok().expect("env  is not initialized");
     let mongo_client = connect_mongo_db();
     let nc = connect_nats();
+    let mc = Arc::new(connect_meilisearch());
 
-    let _ = mongo_client;
-
-    println!("{}", nc.client_ip().unwrap());
-
-    let party = Party::empty();
+    mc.health().await.unwrap();
 
     let party_coll: Collection<Party> = mongo_client.database("party").collection("party");
 
@@ -30,10 +26,12 @@ async fn main() -> std::io::Result<()> {
 
     let cnc = nc.clone();
     let w = wg.worker();
-    
     let c_party_coll = party_coll.clone();
+
+    let nmc = mc.clone();
+
     thread::spawn(move || {
-        party_create(cnc, c_party_coll);
+        party_create(cnc, c_party_coll, nmc);
         drop(w);
     });
 
@@ -41,17 +39,20 @@ async fn main() -> std::io::Result<()> {
     let w = wg.worker();
     let c_party_coll = party_coll.clone();
 
+    let nmc = mc.clone();
+
     thread::spawn(move || {
-        party_update(cnc, c_party_coll);
+        party_update(cnc, c_party_coll, nmc);
         drop(w);
     });
 
     let w = wg.worker();
     let c_party_coll = party_coll.clone();
     let cnc = nc.clone();
+    let nmc = mc.clone();
 
     thread::spawn(move || {
-        party_delete(cnc, c_party_coll);
+        party_delete(cnc, c_party_coll, nmc);
         drop(w);
     });
 
@@ -73,9 +74,9 @@ async fn main() -> std::io::Result<()> {
         drop(w);
     });
 
-    wg.wait().await;
+    println!("all workers started");
 
-    party_coll.insert_one(party, None).unwrap();
+    wg.wait().await;
 
     Ok(())
 }

@@ -1,15 +1,19 @@
-FROM node:alpine
+FROM node:lts-stretch As development
 
-WORKDIR /app
+WORKDIR /usr/src/app
 
-COPY package.json yarn.lock ./
+COPY package*.json ./
 
-RUN yarn
+RUN npm update
+
+RUN npm install -g node-gyp
+
+RUN npm install node-pre-gyp
+
+RUN npm install --only=development
 
 COPY . .
 
-RUN yarn test
+RUN npm run build
 
-RUN yarn build
-
-CMD [ "yarn","start:prod" ]
+CMD ["node", "dist/main"]

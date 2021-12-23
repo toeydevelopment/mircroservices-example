@@ -1,0 +1,426 @@
+{
+	"info": {
+		"_postman_id": "7b35b5c2-cddc-4bad-b286-236004c09660",
+		"name": "blee bank",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "party orchestration",
+			"item": [
+				{
+					"name": "create party",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFuaXJ1dC53b3Jrc3BhY2VAZ21haWwuY29tIiwiaWF0IjoxNjQwMTgxOTI0LCJleHAiOjE2NDAxODE5ODR9.USVHnWFT53xve4_ocawrId-M-DtNUTM1g0wIk91kyC4",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"asdas2321\",\n    \"seat_limit\":123,\n    \"description\":\"as;asdasdas123123d;dasl;\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{PARTY_ORCHES_SERVICE}}/",
+							"host": [
+								"{{PARTY_ORCHES_SERVICE}}"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "join",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{PARTY_ORCHES_SERVICE}}/61c2e78b41352deb6da8d174/join",
+							"host": [
+								"{{PARTY_ORCHES_SERVICE}}"
+							],
+							"path": [
+								"61c2e78b41352deb6da8d174",
+								"join"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "unjoin",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{PARTY_ORCHES_SERVICE}}/61c2c47be8ff11919d46d52c/unjoin",
+							"host": [
+								"{{PARTY_ORCHES_SERVICE}}"
+							],
+							"path": [
+								"61c2c47be8ff11919d46d52c",
+								"unjoin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update party",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"name\":\"asdasd\",\n    \"seat_limit\":123,\n    \"description\":\"as;dasl;dasl;\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{PARTY_ORCHES_SERVICE}}/:id",
+							"host": [
+								"{{PARTY_ORCHES_SERVICE}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete party",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{PARTY_ORCHES_SERVICE}}/:id",
+							"host": [
+								"{{PARTY_ORCHES_SERVICE}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFuaXJ1dC53b3Jrc3BhY2VAZ21haWwuY29tIiwiaWF0IjoxNjQwMTYzMjA0LCJleHAiOjE2NDAxNjMyNjR9.Gw5VH2p8YDGBjGwDxiND7WXzVm_hyKu5DA_EjBeC7As",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "party query",
+			"item": [
+				{
+					"name": "all party",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{PARTY_QUERY_SERVICE}}/",
+							"host": [
+								"{{PARTY_QUERY_SERVICE}}"
+							],
+							"path": [
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "party by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{PARTY_QUERY_SERVICE}}/:id",
+							"host": [
+								"{{PARTY_QUERY_SERVICE}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "61c231340d3263d1fcb1cb9a"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFuaXJ1dC53b3Jrc3BhY2VAZ21haWwuY29tIiwiaWF0IjoxNjQwMTgyMTM5LCJleHAiOjE2NDAxODIxOTl9.r5lh_z_duA1NYtLvaMuidzRtvh4AJsQ6vUNVL4cWKA0",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "authentication",
+			"item": [
+				{
+					"name": "sign up",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"anirut.workspace@gmail.com\",\n    \"password\": \"asdasdas\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{AUTH_SERVICE}}/auth/signup",
+							"host": [
+								"{{AUTH_SERVICE}}"
+							],
+							"path": [
+								"auth",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "sign in",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\": \"anirut.workspace@gmail.com\",\n    \"password\": \"asdasdas\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{AUTH_SERVICE}}/auth/signin",
+							"host": [
+								"{{AUTH_SERVICE}}"
+							],
+							"path": [
+								"auth",
+								"signin"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "sign out",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFuaXJ1dC53b3Jrc3BhY2VAZ21haWwuY29tIiwiaWF0IjoxNjQwMTUxNTM0LCJleHAiOjE2NDAxNTE1OTR9.sXUNhNfGkVGdwPI6DZmi_qlmKNE6WZDt284MTAxNKZE",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{AUTH_SERVICE}}/auth/signout",
+							"host": [
+								"{{AUTH_SERVICE}}"
+							],
+							"path": [
+								"auth",
+								"signout"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "verify token",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFuaXJ1dC53b3Jrc3BhY2VAZ21haWwuY29tIiwiaWF0IjoxNjQwMTUxMTM2LCJleHAiOjE2NDAxNTExOTZ9.SEmSxju8EQ0R2Z6AUXY_7maZPCr9FgMaxpiMqa7TPu8",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"token\": \"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFuaXJ1dC53b3Jrc3BhY2VAZ21haWwuY29tIiwiaWF0IjoxNjQwMTUzNTcyLCJleHAiOjE2NDAxNTM2MzJ9.kPWCJbI0l5pXOrYI6_bICr02QvqvmZsuoPK0GVAGBOc\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{AUTH_SERVICE}}/auth/verify",
+							"host": [
+								"{{AUTH_SERVICE}}"
+							],
+							"path": [
+								"auth",
+								"verify"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFuaXJ1dC53b3Jrc3BhY2VAZ21haWwuY29tIiwiaWF0IjoxNjQwMTgyMTM5LCJleHAiOjE2NDAxODIxOTl9.r5lh_z_duA1NYtLvaMuidzRtvh4AJsQ6vUNVL4cWKA0",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImFuaXJ1dC53b3Jrc3BhY2VAZ21haWwuY29tIiwiaWF0IjoxNjQwMTgwMzAwLCJleHAiOjE2NDAxODAzNjB9.9GpJWRnc39nHRlkW5SGMyl525AwFY_8ttfSfB9TVBG4",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

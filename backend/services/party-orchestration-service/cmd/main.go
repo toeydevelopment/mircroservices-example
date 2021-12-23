@@ -2,11 +2,14 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"log"
 	_http "net/http"
+	"os"
 	"time"
 
 	"github.com/go-redis/redis/v8"
+	"github.com/joho/godotenv"
 	"github.com/nats-io/nats.go"
 	"github.com/toeydevelopment/microservices-example/party-orchestration-service/delivery/http"
 	"github.com/toeydevelopment/microservices-example/party-orchestration-service/middleware"
@@ -18,6 +21,7 @@ import (
 
 func init() {
 	log.SetFlags(log.Lshortfile | log.Ldate)
+	godotenv.Load()
 }
 
 func main() {
@@ -26,9 +30,9 @@ func main() {
 
 	defer cancel()
 
-	authMid := middleware.NewAuthMiddleware("", _http.DefaultClient)
+	authMid := middleware.NewAuthMiddleware(os.Getenv("AUTH_HOST"), _http.DefaultClient)
 
-	nc, err := nats.Connect(nats.DefaultURL)
+	nc, err := nats.Connect(os.Getenv("NATS_HOST"))
 
 	if err != nil {
 		log.Panicln(err)
@@ -37,7 +41,7 @@ func main() {
 	defer nc.Close()
 
 	r := redis.NewClient(&redis.Options{
-		Addr:     "localhost:6379",
+		Addr:     os.Getenv("REDIS_HOST"),
 		Password: "",
 		DB:       0,
 	})
@@ -52,8 +56,9 @@ func main() {
 
 	defer cancel()
 
-	// grpc.WithBlock()
-	grcConn, err := grpc.DialContext(nctx, "", grpc.WithInsecure())
+	fmt.Println(os.Getenv("PARTY_QUERY_HOST"))
+
+	grcConn, err := grpc.DialContext(nctx, os.Getenv("PARTY_QUERY_HOST"), grpc.WithInsecure())
 
 	if err != nil {
 		log.Panicln(err)

@@ -40,16 +40,24 @@ func NewAuthMiddleware(authHost string, hc *http.Client) gin.HandlerFunc {
 			return
 		}
 
+		type verify struct {
+			Token string `json:"token"`
+		}
+
+		v := &verify{
+			Token: splited[1],
+		}
+
+		by, _ := json.Marshal(v)
+
 		req, err := http.NewRequestWithContext(
 			c.Request.Context(),
-			http.MethodHead,
+			http.MethodPost,
 			fmt.Sprintf("%s/auth/verify", authHost),
-			bytes.NewBufferString(fmt.Sprintf(`
-			{
-				"token": "%s"
-			}
-			`, splited[1])),
+			bytes.NewBuffer(by),
 		)
+
+		req.Header.Set("Content-Type", "application/json")
 
 		if err != nil {
 			c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{

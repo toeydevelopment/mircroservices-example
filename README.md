@@ -1,4 +1,17 @@
 # Microservices Example
+![simple arch](docs/simple_arch.jpg "Simple Architecture")
+
+You can explore all availiable apis postman collection in docs/ 
+
+
+## Installation
+- docker compose up -d --build
+- open browser localhost
+- Want to try autocomplete ? goto localhost:7700
+
+## Disclaimer
+I have to time to done my frontend and docs but the simple features are work fine.
+
 
 ## Data-Models
 
